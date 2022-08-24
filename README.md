@@ -1,4 +1,4 @@
-# 每日天气推送
+# 微信测试号每日消息推送
 
 > 本项目基本功能使用了Python的wechatpy,requests第三方库,以及内置的python库进行实现例如: time , random模块进行实现
 
