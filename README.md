@@ -40,6 +40,12 @@ https://gitee.com/simeitol-sajor/wechat-push
 
 不做windows端的原因有很多，包括程序不稳定因素，本作者开发的几个内容基本是比较稳妥的执行方案！
 
+## 项目效果展示
+
+![image-20220825111657158](https://img.recode.fun/img-2022/image-20220825111657158.png?!)
+
+windows微信端截图，手机端同理。
+
 ### 本程序源代码运行
 
 本程序是Python程序，主程序为main.py，其它为不同版本的程序。
@@ -90,20 +96,23 @@ openid对应项目即为测试号显示的"微信号"
 模板消息接口【我的配置】
 
 ```
-标题: {{getSayLove.DATA}}
+   标题: {{getSayLove.DATA}}
    今日是: {{currentTime.DATA}}, 农历: {{nongli.DATA}}, {{week.DATA}}
    当前时间: {{nowDate.DATA}}
    地点: {{address.DATA}}
    今天天气: {{dayweather.DATA}}转{{nightweather.DATA}}, {{winddirection.DATA}}风, 风速: {{windpower.DATA}}
    现在天气: {{weather.DATA}}
-   最高气温: {{daytemp.DATA}}
-   最低气温: {{nighttemp.DATA}}
+   最高气温: {{daytemp.DATA}} ℃
+   最低气温: {{nighttemp.DATA}} ℃
    当前温度: {{temperature.DATA}}
 
    空气质量: {{suggestion.DATA}}
 
    一言:{{saying.DATA}}-{{source.DATA}}
    注释: {{transl.DATA}}
+   特殊而又重要的日子： 
+   距离你的生日还有 {{get_birthday.DATA}} 天
+   我们已经认识了 {{meeting.DATA}} 天
 ```
 
 如果你不喜欢的话可以选择自定义接口！
@@ -125,6 +134,22 @@ openid对应项目即为测试号显示的"微信号"
 这个value值即等于前面定义类api数据请求的内容调用，现在这个步骤属于api数据整合准备传送阶段。
 
 这样即可完成模板消息接口的定制了，其它接口同理！
+
+## 相遇时间及生日设置
+
+在参数设定注释区域内寻找`birthday`和`start_date`参数并设置参数值
+
+![image-20220825111847379](https://img.recode.fun/img-2022/image-20220825111847379.png?)
+
+#### 参数值格式
+
+生日参数值格式：
+
+**%month-%day 【用月份-日期格式填写，不要出现年份】**
+
+相处开始日期参数值格式：
+
+**使用年份-月份-日期的形式填写**
 
 ## 时间段消息模板的配置
 

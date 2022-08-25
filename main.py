@@ -1,10 +1,11 @@
 import time
-import random
-import requests
+from datetime import date, datetime
+import math
 from wechatpy import WeChatClient
-from wechatpy.client.api import WeChatMessage
-import datetime
-
+from wechatpy.client.api import WeChatMessage, WeChatTemplate
+import requests
+import os
+import random
 
 ############### 参数设定区域 #################
 # 微信测试号信息
@@ -25,75 +26,33 @@ zxkey = ''
 gdkey = ''
 
 # 生日日期参数填写
-birthyear = '' # 不要填写大于当前日期
-birthmonth = '' # 直接填写整数，前面无需加0
-birthday = '' # 出生日，日期
+birthday = '' # 格式 %month-%day 【用月份-日期格式填写，不要出现年份】
+# 相处开始日期
+start_date = '' # 使用年份-月份-日期的形式填写
 
 location = '' # 心知天气api 空气质量监测地区，英文拼写
 cityacode = '' # 高德地图天气情况获取，城市acode 参照readme文档填写
+
 ############### 参数设定区域结束 ##################
 
 ############## ↓ ↓ ↓ ↓ 下方程序根据需求自定义更改 ↓ ↓ ↓ ↓ ################
-
+today = datetime.now()
 # 当前日期获取
 currentTime = time.strftime("%Y-%m-%d", time.localtime(time.time()))
 nowDate = time.strftime("%H:%M:%S", time.localtime(time.time()))
+# 相处日期
+def get_count():
+  delta = today - datetime.strptime(start_date, "%Y-%m-%d")
+  return delta.days
 
 # 生日日期计算
-toyear = time.strftime('%Y',time.localtime(time.time()))    #"%Y"将被无世纪的年份锁代替
-tomon = time.strftime('%m',time.localtime(time.time()))
-today = time.strftime('%d',time.localtime(time.time()))
-toyear = int(toyear)
-tomon = int(tomon)
-today = int(today)
-todaynow = time.strftime("%Y-%m-%d",time.localtime())
+def get_birthday():
+  next = datetime.strptime(str(date.today().year) + "-" + birthday, "%Y-%m-%d")
+  if next < datetime.now():
+    next = next.replace(year=next.year + 1)
+  return (next - today).days
 
-# 定义距离生日日期天数计算
-def insert_year():
-    #润年2月29天，平年28天
-    flag = True
-    while flag:
-        input_year = birthyear #输入出生的年份
-        #今年之前出生的
-        if input_year <= toyear:
-            return input_year
-            flag = False
-        else:
-            print("请不要输入未来的年份，因为她还没有出生...")
-            continue
-
-def insert_mon():
-    flag = True
-    while flag:
-        input_mon = birthmonth # 出生月份
-        if input_mon > 12 or input_mon < 1:
-            print("请输入正确的出生月")
-            continue
-        else:
-            return input_mon
-            flag = False
-
-
-def insert_day():
-    flag = True
-    while flag:
-        input_day = birthday
-        if input_day > today:
-            if input_day > 31 or input_day < 1:
-                print("请输入正确的出生日")
-                continue
-            elif input_day == today:
-                print("生日快乐")
-                flag = False
-                return input_day
-            else:
-                return input_day
-                flag = False
-        else:
-            return input_day
-            flag = False
-
-# 日期处理
+# 当前日期获取处理
 def getweek():
     weekEng = time.strftime("%A", time.localtime(time.time()))
     week_list = {
@@ -111,7 +70,7 @@ def getweek():
 ##### API调用部分开始 ###
 
 # 高德
-def getcitybase():
+def citybase():
     url = 'https://restapi.amap.com/v3/weather/weatherInfo'
     params = {
         "key": gdkey,
@@ -123,10 +82,10 @@ def getcitybase():
     if resp.status_code == 200:
         return data
     else:
-        print('请求失败')
+        print('请求失败，请查看错误')
 
 
-def getcityall():
+def cityall():
     url = 'https://restapi.amap.com/v3/weather/weatherInfo'
     params = {
         "key": gdkey,
@@ -141,30 +100,30 @@ def getcityall():
         print('请求失败')
 
 
-getcitybase = getcitybase()
-getcityall = getcityall()
-address = getcitybase['lives'][0]['city']  # 地点
-weather = getcitybase['lives'][0]['weather']  # 天气
-temperature = getcitybase['lives'][0]['temperature']  # 温度
-winddirection = getcitybase['lives'][0]['winddirection']  # 风向
-windpower = getcitybase['lives'][0]['windpower']  # 风力
-dayweather = getcityall['forecasts'][0]['casts'][0]['dayweather']
-nightweather = getcityall['forecasts'][0]['casts'][0]['nightweather']
-daytemp = getcityall['forecasts'][0]['casts'][0]['daytemp']
-nighttemp = getcityall['forecasts'][0]['casts'][0]['nighttemp']
+citybase = citybase()
+cityall = cityall()
+address = citybase['lives'][0]['city']  # 地点
+weather = citybase['lives'][0]['weather']  # 天气
+temperature = citybase['lives'][0]['temperature']  # 温度
+winddirection = citybase['lives'][0]['winddirection']  # 风向
+windpower = citybase['lives'][0]['windpower']  # 风力
+dayweather = cityall['forecasts'][0]['casts'][0]['dayweather']
+nightweather = cityall['forecasts'][0]['casts'][0]['nightweather']
+daytemp = cityall['forecasts'][0]['casts'][0]['daytemp']
+nighttemp = cityall['forecasts'][0]['casts'][0]['nighttemp']
 
 print('--------', '\n', '城市:', address, '\n', '天气:', weather, '\n', '当下温度:', temperature + '℃', '\n', '风向:',
       winddirection, '\n', '风速:', windpower)
 print('--------')
-print(getcityall['forecasts'][0]['casts'][0]['dayweather'])
-print(getcityall['forecasts'][0]['casts'][0]['nightweather'])
-print(getcityall['forecasts'][0]['casts'][0]['daytemp'])
-print(getcityall['forecasts'][0]['casts'][0]['nighttemp'])
+print(cityall['forecasts'][0]['casts'][0]['dayweather'])
+print(cityall['forecasts'][0]['casts'][0]['nightweather'])
+print(cityall['forecasts'][0]['casts'][0]['daytemp'])
+print(cityall['forecasts'][0]['casts'][0]['nighttemp'])
 print('--------')
-print(getcityall['forecasts'][0]['casts'][1]['dayweather'])
-print(getcityall['forecasts'][0]['casts'][1]['nightweather'])
-print(getcityall['forecasts'][0]['casts'][1]['daytemp'])
-print(getcityall['forecasts'][0]['casts'][1]['nighttemp'])
+print(cityall['forecasts'][0]['casts'][1]['dayweather'])
+print(cityall['forecasts'][0]['casts'][1]['nightweather'])
+print(cityall['forecasts'][0]['casts'][1]['daytemp'])
+print(cityall['forecasts'][0]['casts'][1]['nighttemp'])
 
 
 # 随机颜色渲染
@@ -355,6 +314,8 @@ if "06:00:00" < nowDate < "22:00:00":
         "saying": {"value": getlzmy['saying'], "color": get_random_color()},
         "source": {"value": getlzmy['source'], "color": get_random_color()},
         "transl": {"value": getlzmy['transl'], "color": get_random_color()},
+        "get_birthday": {"value": get_birthday(),"color": get_random_color()},
+        "meeting": {"value": get_count(),"color": get_random_color()},\
    }
 
 # if "11:00:00" < nowDate < "14:00:00":
