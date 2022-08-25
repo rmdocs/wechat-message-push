@@ -115,7 +115,7 @@ def getcitybase():
     url = 'https://restapi.amap.com/v3/weather/weatherInfo'
     params = {
         "key": gdkey,
-        "city": "210204", # 城市acode码填写
+        "city": cityacode, # 城市acode码填写
         "extensions": "base",
     }
     resp = requests.get(url, params)
