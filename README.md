@@ -1,4 +1,4 @@
-# 每日天气推送
+# 微信测试号每日消息推送
 
 > 本项目基本功能使用了Python的wechatpy,requests第三方库,以及内置的python库进行实现例如: time , random模块进行实现
 
@@ -132,7 +132,13 @@ openid对应项目即为测试号显示的"微信号"
 
 预设了四个时间段，自行在代码中修改
 
-:warning:如果时间段不在范围内请求的消息是无法发送出去的，会报错，返回错误信息！
+:warning:如果时间段不在范围内请求的消息是无法发送出去的，会报错，返回错误信息！:warning:
+
+### 程序版本更改须知 :warning:
+
+本程序把各类需要填写的参数全部放到了 程序的开头位置,包括templateid等参数，请根据程序注释进行引导填写！
+
+![image-20220825083515309](https://img.recode.fun/img-2022/image-20220825083515309.png?)
 
 ## 所需API申请
 
@@ -250,19 +256,19 @@ https://docs.qq.com/document/DQkVXZFF6ckRMelll
 
 ![image-20220824200907241](https://img.recode.fun/img-2022/image-20220824200907241.png?)
 
-找到acode码后复制到我们代码中高德注释下 param项下的`"city": "Acode",`
+找到acode码后复制到我们代码中参数设置区域下的`cityacode = 'Acode编码',`
 
-![image-20220824201026815](https://img.recode.fun/img-2022/image-20220824201026815.png?)
+![image-20220825083642776](https://img.recode.fun/img-2022/image-20220825083642776.png?)
 
 #### 心知天气API空气质量地区设定
 
-请在`getkqzl()`类中找到`params`中的`location`项，然后这个是设定监测空气质量的地理位置，官方api中location项支持如下几种格式请自行选择使用！
+请在代码中参数设置区域找到`location`项进行填写，这个是设定监测空气质量的地理位置，官方api中location项支持如下几种格式请自行选择使用！
 
 官方空气质量api文档：[逐小时空气质量预报 API文档](https://seniverse.yuque.com/books/share/f4f9bf1a-d3d9-4a68-8996-950f8c88400e/size6p)
 
 ![image-20220824212634996](https://img.recode.fun/img-2022/image-20220824212634996.png?)
 
-![image-20220824211028719](https://img.recode.fun/img-2022/image-20220824211028719.png?)
+![image-20220825083830328](https://img.recode.fun/img-2022/image-20220825083830328.png?!)
 
 #### 对本项目源码更改需求的解释
 
