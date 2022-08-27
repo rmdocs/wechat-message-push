@@ -1,6 +1,6 @@
 # 微信测试号每日消息推送
 
-> 本项目基本功能使用了Python的wechatpy,requests第三方库,以及内置的python库进行实现例如: time , random模块进行实现
+> 本项目基本功能使用了Python的wechatpy,requests第三方库,以及内置的python库进行实现例如: time , random模块进行实现，欢迎大家进行使用体验
 
 ### 本项目提供版本说明
 

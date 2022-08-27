@@ -41,10 +41,12 @@ today = datetime.now()
 currentTime = time.strftime("%Y-%m-%d", time.localtime(time.time()))
 nowDate = time.strftime("%H:%M:%S", time.localtime(time.time()))
 # 相处日期
+#### 逻辑：从现在时间-相识时间得出时间长！
 def get_count():
   delta = today - datetime.strptime(start_date, "%Y-%m-%d")
   return delta.days
 
+### 逻辑: 判断生日是否已经过了，过了的话下一年的时间长计算，没过则用现在的月份日期-生日的月份日期
 # 生日日期计算
 def get_birthday():
   next = datetime.strptime(str(date.today().year) + "-" + birthday, "%Y-%m-%d")
